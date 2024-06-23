@@ -13,8 +13,8 @@ const LogInPage = () => {
 					<label for="password">Password:</label>
 					<input type="text" id="password" />
 				</div>
-				<button>Log In</button>
 			</div>
+			<button>Log In</button>
 		</div>
 	)
 }
