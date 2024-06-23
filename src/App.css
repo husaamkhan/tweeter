@@ -35,17 +35,43 @@
 
 body {
 	background-color: #010e13;
+	font-family: 'Verdana', sans-serif;
 }
 
 input[type=text] {
 	width: 400px;
-	background-color: #e3f6fe;
+	height: 25px;
+	background-color: #dff5fe;
 	border: none;
-	border-radius: 5px
+	border-radius: 5px;
+	transition: 0.2s;
 }
 
 button {
+	font-family: "Verdana", sans-serif;
+	font-size: 14px;
+	color: #e3f6fe;
+	background-color: #07aef8;
 	width: 80px;
+	height: 30px;
+	border: none;
+	border-radius: 7px;
+	transition: 0.2s;
+}
+
+button:hover {
+	background-color: #36bdf9;
+	transition: 0.2s;
+}
+
+button:active {
+	background-color: #0580b6;
+	transition: 0.2s;
+}
+
+input:hover {
+	background-color:#caeefd;
+	transition: 0.2s;
 }
 
 .input-div {
@@ -57,4 +83,9 @@ button {
 
 .logo {
 	color: #07aef8;
+}
+
+label {
+	color: #e3f6fe;
+	margin-bottom: 2px;
 }
