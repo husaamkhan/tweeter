@@ -14,7 +14,10 @@ const LogInPage = () => {
 					<input type="text" id="password" />
 				</div>
 			</div>
-			<button>Log In</button>
+			<div log-in-buttons>
+				<button>Log In</button>
+				<button>Register</button>
+			</div>
 		</div>
 	)
 }
