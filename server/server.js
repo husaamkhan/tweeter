@@ -13,9 +13,9 @@ const mysql = require('mysql');
 
 const db_config = {
 	host: 'localhost',
-	port: 3000,
+	port: 3306, // default MySQL port
 	user: 'your_mysql_user',
-	password: 'your_mysql_password'
+	password: 'your_mysql_password',
 	database: 'tweeter_db'
 };
 
@@ -28,11 +28,12 @@ app.use(session({
 	secret: "enter_a_secret_key_here",
 	resave: true,
 	saveUninitialized: true,
+	store: session_store
 }));
 
 app.use(req, res, next) {
 	console.log(req.session);
-	console.log("Request: + req.path");
+	console.log("Request: " + req.path);
 	next();
 };
 
@@ -59,3 +60,7 @@ async function sendLogInPage(req, res, next) {
 async function sendRegistrationPage(req, res, next) {
 	res.status(200).send("Sending registration page")
 }
+
+app.listen(3000, () => {
+	console.log("Server running on port 3000");
+})
