@@ -1,6 +1,14 @@
 import './LogInPage.css'
 
 const LogInPage = () => {
+	const logInClick = () => {
+		alert("log in button clicked!");
+	}
+
+	const registerClick = () => {
+		alert("register button clicked!");
+	}
+
 	return (
 		<div className="log-in-div">
 			<h1 className="logo">Tweeter</h1>	
@@ -15,8 +23,8 @@ const LogInPage = () => {
 				</div>
 			</div>
 			<div log-in-buttons>
-				<button>Log In</button>
-				<button>Register</button>
+				<button onClick={logInClick}>Log In</button>
+				<button onClick={registerClick}>Register</button>
 			</div>
 		</div>
 	)
