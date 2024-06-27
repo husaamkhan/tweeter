@@ -1,12 +1,15 @@
 import './LogInPage.css';
+import { useNavigate } from 'react-router-dom';
 
 const LogInPage = () => {
-	const logInClick = () => {
+	const navigate = useNavigate();
+
+	const handleLogInClick = () => {
 		alert("log in button clicked!");
 	}
 
-	const registerClick = () => {
-		alert("register button clicked!");
+	const handleRegisterClick = () => {
+		navigate("/registration")
 	}
 
 	return (
@@ -23,8 +26,8 @@ const LogInPage = () => {
 				</div>
 			</div>
 			<div log-in-buttons>
-				<button onClick={logInClick}>Log In</button>
-				<button onClick={registerClick}>Register</button>
+				<button onClick={handleLogInClick}>Log In</button>
+				<button onClick={handleRegisterClick}>Register</button>
 			</div>
 		</div>
 	)

@@ -52,8 +52,8 @@ button {
 	font-size: 14px;
 	color: #e3f6fe;
 	background-color: #07aef8;
-	width: 80px;
-	height: 30px;
+	width: fit-content;
+	padding: 8px;
 	border: none;
 	border-radius: 7px;
 	transition: 0.2s;
