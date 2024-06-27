@@ -1,4 +1,4 @@
-import './LogInPage.css'
+import './LogInPage.css';
 
 const LogInPage = () => {
 	const logInClick = () => {
@@ -30,4 +30,4 @@ const LogInPage = () => {
 	)
 }
 
-export default LogInPage
+export default LogInPage;
