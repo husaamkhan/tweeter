@@ -75,7 +75,7 @@ input:hover {
 	transition: 0.2s;
 }
 
-.input-div {
+.input-container {
 	margin: auto;
 	display: flex;
 	flex-direction: column;
@@ -89,4 +89,25 @@ input:hover {
 label {
 	color: #e3f6fe;
 	margin-bottom: 2px;
+}
+
+
+.auth-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin-top: 10%;
+}
+
+.form-container {
+	margin: auto;
+	display: flex;
+	flex-direction: column;
+}
+
+.auth-page {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }

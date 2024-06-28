@@ -13,14 +13,14 @@ const LogInPage = () => {
 	}
 
 	return (
-		<div className="log-in-div">
+		<div className="auth-container">
 			<h1 className="logo">Tweeter</h1>	
-			<div className="information-div">
-				<div className="input-div">
+			<div className="form-container">
+				<div className="input-container">
 					<label for="username">Username:</label>
 					<input type="text" id="username" />
 				</div>
-				<div className="input-div">
+				<div className="input-container">
 					<label for="password">Password:</label>
 					<input type="text" id="password" />
 				</div>
