@@ -10,11 +10,11 @@ app.use(express.json());
 
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
-const mysql = require('mysql');
+const mysql = require('mysql2');
 
-const connection = await mysql.createConnection(db_config);
+const db = mysql.createConnection(db_config);
 
-connection.connect((err) => {
+db.connect((err) => {
 	if (err) {
 		console.error("Error connecting to database: " + err);
 		return;
@@ -23,7 +23,7 @@ connection.connect((err) => {
 	console.log("Successfully connected to database");
 })
 
-const session_store = new MySQLStore({}, connection);
+const session_store = new MySQLStore({}, db);
 
 app.use(session({
 	secret: "secret_key",
@@ -38,7 +38,7 @@ app.use(function (req, res, next) {
 	next();
 });
 
-let user_router = require('./user-router.js');
+let user_router = require('./user-router.js')(db);
 app.use('/user', user_router);
 let app_router = require('./app-router.js');
 app.use('/app', app_router);
@@ -52,4 +52,4 @@ app.listen(3000, () => {
 })
 
 // Exports connection so routers don't have to create their own separate connections
-module.exports = connection; 
+module.exports = { db }; 
