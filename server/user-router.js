@@ -20,44 +20,65 @@ module.exports = (db) => {
 	router.put('/change-password', changePassword);
 	router.put('/change-profile-picture', changeProfilePicture);
 
-	async function logInUser(req, res, next) {}
+	async function logInUser(req, res, next) {
+		try {
+			const { username, password } = req.body;
+			const user = await findUser(username);
+
+			if ( user.length === 0 ) {
+				res.status(401).send("Access denied");
+			}
+			else if ( password === user[0].password ) {
+				req.session.username = user.username;
+				req.session.logged_in = true;
+
+				res.status(200).send("Access granted");
+			} else {
+				res.status(401).send("Access denied");
+			}
+		} catch (err) {
+			console.log(`Error authenticating user: ${err}`);
+			res.status(500).send("Internal Server Error occured while authenticating user");
+		}
+	}
+
 	async function registerUser(req, res, next) {
-		const { firstname, lastname, username, password } = req.body;
-		const user = await findUser(username);
+		try {
+			const { firstname, lastname, username, password } = req.body;
+			const user = await findUser(username);
 
-		if (user) {
-			console.log(`Error registering user with username '`, username, `': user already exists`);
-			res.status(400).send("Username taken");
-		} else {
-			const q = `INSERT INTO users (username, password, first_name, last_name) VALUES (` +
-				`${username}, ${password}, ${firstname}, ${lastname})`;
-			await db.query(query, (err, result) => {
-				if (err) {
-					console.error(`Error executing query: ${q}, ${err}`);
-				} else {
+			if ( user.length !== 0 ) {
+				console.log(`Error registering user with username '`, username, `': user already exists`);
+				res.status(400).send("Username taken");
+			} else {
+				const q = "INSERT INTO users (username, password, first_name, last_name) VALUES (" +
+					"?, ?, ?, ?)";
+
+				db.query(q, [username, password, firstname, lastname], (err, result) => {
+					if (err) throw err;
 					console.log(result);
-				}
-			})
+				});
 
-			res.status(200).send("Successfully registered")
+				res.status(200).send("Successfully registered");
+			}
+
+		} catch (err) {
+			console.log(`Error registering user: ${err}`);
+			res.status(500).send("Internal Server Error occured while registering user");
 		}
 	}
 
 	async function findUser(username) {
-		try {
-			const q = `SELECT * FROM users WHERE username = ${username}'`;
-			await db.query(query, (err, result) => {
+		return new Promise((resolve, reject) => {
+			const q = "SELECT * FROM users WHERE username = ?";
+
+			db.query(q, [username], (err, result) => {
 				if (err) {
-					console.error("Error executing query: " + q + ", err");
-				} else {
-					console.log(result);
+					return reject(err);
 				}
+				resolve(result);
 			});
-			const user = await query(q);
-			return user;
-		} catch (err) {
-			res.status(500).send("Error fetching user: " + err);
-		}
+		});
 	}
 
 	async function postTweet(req, res, next) {}
