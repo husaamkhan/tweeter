@@ -1,6 +1,7 @@
 import './App.css';
 import LogInPage from './LogInPage';
 import RegistrationPage from './RegistrationPage';
+import HomePage from './HomePage';
 import { BrowserRouter as Router, Route, Routes, useHistory } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
@@ -11,7 +12,7 @@ function App() {
 				<Routes>
 					<Route path="/" element={<LogInPage />} />
 					<Route path="/registration" element={<RegistrationPage />} />
-					<Route path="/home" element={<HomePage />}>
+					<Route path="/home" element={<HomePage />} />
 				</Routes>
 			</Router>
 	  	</div>

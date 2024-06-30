@@ -84,6 +84,7 @@ input:hover {
 
 .logo {
 	color: #07aef8;
+	font-size: 3em;
 }
 
 label {
@@ -114,4 +115,91 @@ label {
 
 .password-input {
 	-webkit-text-security: circle;
+}
+
+.nav-ul {
+	list-style-type: none;
+	list-style-position: inside;
+	color: #e3f6fe;
+	font-size: 2em;
+	align-items: center;
+	display: inline-flex;
+	flex-direction: column;
+	box-sizing: border-box;
+}
+
+.nav-li {
+	padding: 0.4em;
+	height: 2em;
+	line-height: 2em;
+	margin-right: 1em;
+	background-color: #00102d;
+	width: 110%;
+	transition: 0.2s;
+}
+
+.nav-li:hover {
+	background-color: #009bff;
+	transition: 0.2s;
+}
+
+.nav-li:active {
+	background-color: #0580b6;
+	transition: 0.2s;
+}
+
+.nav-home-li {
+	padding: 0.4em;
+	height: 2em;
+	line-height: 2em;
+	margin-right: 1em;
+	background-color: #00102d;
+	width: 110%;
+	transition: 0.2s;
+	border-radius: 0 10px 0 0;
+}
+
+.nav-home-li:hover {
+	background-color: #009bff;
+	transition: 0.2s;
+}
+
+.nav-home-li:active {
+	background-color: #0580b6;
+	transition: 0.2s;
+}
+
+.nav-post-li {
+	padding: 0.4em;
+	height: 2em;
+	line-height: 2em;
+	margin-right: 1em;
+	background-color: #009bff;
+	width: 110%;
+	transition: 0.2s;
+	border-radius: 0 0 10px 0;
+}
+
+.nav-post-li:hover {
+	background-color: #36bdf9;
+	transition: 0.2s;
+}
+
+.nav-post-li:active {
+	background-color: #0580b6;
+	transition: 0.2s;
+}
+
+.nav-container {
+	display: inline-flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	margin-left: 0.5em;
+	margin-right: 15em;
+}
+
+.home-container {
+	display: flex;
+	flex-direction: row;
 }
