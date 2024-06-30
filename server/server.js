@@ -47,8 +47,8 @@ app.use(function (req, res, next) {
 	res.status(404).send("404 Not Found!");
 });
 
-app.listen(3000, () => {
-	console.log("Server running on port 3000");
+app.listen(4000, () => {
+	console.log("Server running on port 4000");
 })
 
 // Exports connection so routers don't have to create their own separate connections
