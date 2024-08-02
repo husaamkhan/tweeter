@@ -98,17 +98,20 @@ module.exports = (db) => {
 			const followees = await getFollows(req);
 			let tweets = [];
 
-			for (followee_id in followees) {
-				let followee_tweets = await getTweets(followee_tweets);
-				
-				if ( tweets.length === 0 ) {
-					tweets = followee_tweets;
-					continue;
-				}
+			if ( followees.length > 0 ) {
+				for (followee_id in followees) {
+					let followee_tweets = await getTweets(followee_tweets);
+					
+					if ( tweets.length === 0 ) {
+						tweets = followee_tweets;
+						continue;
+					}
 
-				let tweets = merge(followee_tweets, tweets);
-				
+					let tweets = merge(followee_tweets, tweets);
+				}					
 			}
+
+			res.status(200).json(tweets);
 
 		} catch(err) {
 			console.log(`Error getting feed: ${err}`);
@@ -142,7 +145,7 @@ module.exports = (db) => {
 		});
 	}
 
-	function merge(arr1, arr2) {
+	function mergeTweets(arr1, arr2) {
 		let temp = [];
 
 		let i1 = arr1.length-1;
@@ -150,18 +153,32 @@ module.exports = (db) => {
 		t = 0;
 		 
 		while(t < arr1.length+arr2.length && (i1 !== -1 && i2 !== -1)) {
-			if ()
+			if ( i1 === -1 ) {
+				temp[t] = arr2[i2];
+				i2--;
+				continue;
+			}
 
-			if ( arr1[i1] > arr2[i2] ) {
+			if ( i2 === -1 ) {
 				temp[t] = arr1[i1];
 				i1--;
+				continue;
 			}
 
-			else {
-				temp[2] = arr2[i2];
+			if ( compareDate(arr1[i1].date, arr2[i2].date) ) {
+				temp[t] = arr1[i1];
+				i1--;
+			} else {
+				temp[t] = arr2[i2];
 				i2--;
 			}
+
+			t++;
 		}
+	}
+
+	function compareDate(d1, d2) {
+		console.log(d1);
 	}
 
 	async function getSearchResults(req, res, next) {}
