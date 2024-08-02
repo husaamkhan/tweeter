@@ -14,8 +14,8 @@ const RegistrationPage = () => {
 
 	const handleRegister = async () => {
 		try{
-			if ( data.firstname == "" || data.lastname == "" || data.username == "" || 
-				data.password == "" ) {
+			if ( data.firstname === "" || data.lastname === "" || data.username === "" || 
+				data.password === "" ) {
 				alert("Please fill all fields!");
 				return;
 			}

@@ -1,9 +1,13 @@
+import { useNavigate } from 'react-router-dom';
+
 const Navigation = () => {
-	const handleHome = () => {};
-	const handleSearch = () => {};
-	const handleNotifications = () => {};
-	const handleProfile = () => {};
-	const handlePost = () => {};
+	const navigate = useNavigate();
+
+	const handleHome = () => { navigate("/home") };
+	const handleSearch = () => { navigate("/search") };
+	const handleNotifications = () => { navigate("/notifications") };
+	const handleProfile = () => { navigate("/profile") };
+	const handlePost = () => { navigate("/post") };
 	
 	return (
 		<div className="nav-container">

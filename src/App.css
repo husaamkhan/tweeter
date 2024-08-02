@@ -196,10 +196,29 @@ label {
 	align-items: center;
 	text-align: center;
 	margin-left: 0.5em;
-	margin-right: 15em;
 }
 
-.home-container {
+.page-container {
 	display: flex;
 	flex-direction: row;
+}
+
+h1 {
+	color: #e3f6fe;
+}
+
+.content-container {
+	display: inline-flex;
+	flex-direction: column;
+	align-items: center;
+	flex-grow: 0.75;
+}
+
+.divider {
+	background-color: #004d7f;
+	width: 2.2px;
+	height: auto;
+	margin: 2em;
+	border: none;
+	border-radius: 7px;
 }
