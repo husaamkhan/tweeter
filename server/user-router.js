@@ -84,7 +84,84 @@ module.exports = (db) => {
 	async function postTweet(req, res, next) {}
 
 	async function getFeed(req, res, next) {
-		
+		// get user id from request session
+		// create query that gets the row in the follows table in which user id matches follower id
+		// send query to db
+		// get followee id from query result
+		// send query to db that matches followee id with tweets
+		// add tweets to list
+		// repeat for all followees
+		// sort tweets by date
+		// return tweets
+
+		try {
+			const followees = await getFollows(req);
+			let tweets = [];
+
+			for (followee_id in followees) {
+				let followee_tweets = await getTweets(followee_tweets);
+				
+				if ( tweets.length === 0 ) {
+					tweets = followee_tweets;
+					continue;
+				}
+
+				let tweets = merge(followee_tweets, tweets);
+				
+			}
+
+		} catch(err) {
+			console.log(`Error getting feed: ${err}`);
+			res.status(500).send("Internal Server Error occured while getting user's feed");
+		}
+	}
+
+	async function getFollows(req) {
+		return new Promise((resolve, reject) => {
+			const q = "SELECT followee_id FROM follows WHERE follower_id = ?;";
+			db.query(q, [req.session.user_id], (err, result) => {
+				if (err) {
+					return reject(err);
+				}
+
+				resolve(result);
+			});
+		});
+	}
+
+	async function getTweets(user_id) {
+		return new Promise((resolve, reject) => {
+			const q = "SELECT * FROM tweets WHERE user_id = ?;";
+			db.query(q, [req.session.user_id], (err, result) => {
+				if (err) {
+					return reject(err);
+				}
+
+				resolve(result);
+			});
+		});
+	}
+
+	function merge(arr1, arr2) {
+		let temp = [];
+
+		let i1 = arr1.length-1;
+		let i2 = arr2.length-1;
+		t = 0;
+		 
+		while(t < arr1.length+arr2.length && (i1 !== -1 && i2 !== -1)) {
+			if ()
+
+			if ( arr1[i1] > arr2[i2] ) {
+				temp[t] = arr1[i1];
+				i1--;
+			}
+
+			else {
+				temp[2] = arr2[i2];
+				i2--;
+			}
+		}
 	}
 
 	async function getSearchResults(req, res, next) {}
