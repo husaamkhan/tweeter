@@ -30,6 +30,7 @@ module.exports = (db) => {
 			}
 			else if ( password === user[0].password ) {
 				req.session.username = user.username;
+				req.session.user_id = user.user_id;
 				req.session.logged_in = true;
 
 				res.status(200).send("Access granted");
@@ -37,7 +38,7 @@ module.exports = (db) => {
 				res.status(401).send("Access denied");
 			}
 		} catch (err) {
-			console.log(`Error authenticating user: ${err}`);
+			console.log(`Error logging in user: ${err}`);
 			res.status(500).send("Internal Server Error occured while authenticating user");
 		}
 	}
@@ -48,41 +49,44 @@ module.exports = (db) => {
 			const user = await findUser(username);
 
 			if ( user.length !== 0 ) {
-				console.log(`Error registering user with username '`, username, `': user already exists`);
 				res.status(400).send("Username taken");
 			} else {
+				
 				const q = "INSERT INTO users (username, password, first_name, last_name) VALUES (" +
 					"?, ?, ?, ?)";
 
 				db.query(q, [username, password, firstname, lastname], (err, result) => {
 					if (err) throw err;
-					console.log(result);
 				});
 
 				res.status(200).send("Successfully registered");
 			}
 
 		} catch (err) {
-			console.log(`Error registering user: ${err}`);
 			res.status(500).send("Internal Server Error occured while registering user");
 		}
 	}
 
 	async function findUser(username) {
 		return new Promise((resolve, reject) => {
-			const q = "SELECT * FROM users WHERE username = ?";
+			const q = "SELECT * FROM users WHERE username = ?;";
 
 			db.query(q, [username], (err, result) => {
 				if (err) {
 					return reject(err);
 				}
+
 				resolve(result);
 			});
 		});
 	}
 
 	async function postTweet(req, res, next) {}
-	async function getFeed(req, res, next) {}
+
+	async function getFeed(req, res, next) {
+		
+	}
+
 	async function getSearchResults(req, res, next) {}
 	async function getNotifications(req, res, next) {}
 	async function getProfile(req, res, next) {}
