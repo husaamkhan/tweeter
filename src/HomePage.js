@@ -8,7 +8,7 @@ const HomePage = () => {
 	const [error, setError] = useState(null);
 
 	useEffect( () => {
-		const fetchFeed = async () => {
+		const getFeed = async () => {
 			try {
 				const response = await axios.get("/user/feed");
 				setFeed(response.data);
@@ -19,7 +19,7 @@ const HomePage = () => {
 			}
 		}
 
-		fetchFeed();
+		getFeed();
 	}, []);	
 
 	if ( loading ) {

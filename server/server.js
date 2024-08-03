@@ -38,7 +38,7 @@ app.use(function (req, res, next) {
 	next();
 });
 
-let user_router = require('./user-router.js')(db);
+let user_router = require('./user-router.js')(db, path);
 app.use('/user', user_router);
 let app_router = require('./app-router.js');
 app.use('/app', app_router);

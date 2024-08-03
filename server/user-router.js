@@ -1,6 +1,6 @@
 const express = require('express');
 
-module.exports = (db) => {
+module.exports = (db, path) => {
 	const router = express.Router();
 
 	// POST Requests
@@ -13,6 +13,8 @@ module.exports = (db) => {
 	router.get('/search/:input', getSearchResults);
 	router.get('/notifications', getNotifications);
 	router.get('/profile/:username', getProfile);
+	router.get('/myprofile', getMyProfile);
+	router.get('/profile-picture/:username', getProfilePicture);
 	router.get('/view-tweet/:tweet_id', getTweet);
 
 	// PUT Requests
@@ -184,6 +186,79 @@ module.exports = (db) => {
 	async function getSearchResults(req, res, next) {}
 	async function getNotifications(req, res, next) {}
 	async function getProfile(req, res, next) {}
+
+	async function getMyProfile(req, res, next) {
+		try {
+			console.log("-- getmyprofile() --");
+			let profile = await getProfileInfo(req.session.username);
+
+			if ( profile.length !== 0 ) {
+				profile[0].username = req.session.username;
+				res.status(200).send("User profile found");
+			} else {
+				res.status(404).send("User not found");
+			}
+		} catch(err) {
+			console.log(`Error getting user profile: ${err}`)
+			res.status(500).send("Internal server error");
+		}
+	}
+
+	async function getProfileInfo(username) {
+		return new Promise((resolve, reject) => {
+			const q = "SELECT first_name, last_name, followers, following, posts, likes FROM users" + 
+						"WHERE username = ?;"
+			
+			db.query(q, [username], (err, result) => {
+				if (err) {
+					return reject(err);
+				}
+
+				resolve(result);
+			});
+		});
+	}
+
+	async function getProfilePicture(req, res, next) {
+		try {
+			const id = await findProfilePictureId(req.params.username);
+			const filepath = await getProfilePicturePath(id);
+
+			res.status(200).sendFile(path.resolve(filepath), (err) => {
+				if (err) throw err;
+			})
+		} catch(err) {
+			console.log(`Error getting profile picture: ${err}`)
+			res.status(500).send("Internal server error");
+		}
+	}
+
+	async function findProfilePictureId(username) {
+		return new Promise((resolve, reject) => {
+			const q = "SELECT profile_picture_id FROM users WHERE username = ?;";
+			db.query(q, [username], (err, result) => {
+				if (err) {
+					return reject(err);
+				}
+
+				resolve(result);
+			});
+		});
+	}
+
+	async function getProfilePicturePath(id) {
+		return new Promise((resolve, reject) => {
+			const q = "SELECT filepath FROM profile_pictures WHERE profile_picture_id = ?;";
+			db.query(q, [id], (err, result) => {
+				if (err) {
+					return reject(err);
+				}
+
+				resolve(result);
+			});
+		});
+	}
+
 	async function getTweet(req, res, next) {}
 	async function editProfile(req, res, next) {}
 	async function changePassword(req, res, next) {}
