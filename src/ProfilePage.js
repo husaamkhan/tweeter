@@ -4,17 +4,39 @@ import Navigation from './Navigation';
 
 const ProfilePage = () => {
 	const [profile, setProfile] = useState(null);
+	const [profile_pic, setProfilePic] = useState("");
 	const [loading, setLoading]	= useState(true);
 	const [error, setError] = useState(null);
 
 	useEffect( () => {
 		const getProfile = async () => {
-			const response = await axios.get("/user/myprofile");
-			setProfile(response.data);
+			try {
+				const response = await axios.get("/user/myprofile");
+				setProfile(response.data);
+			} catch(err) {
+				setError(err.message);
+			} finally {
+				setLoading(false);
+			}
 		}
 
 		getProfile();
 	}, []);
+
+	useEffect( () => {
+		const getProfilePic = async () => {
+			try {
+				const response = await axios.get(`/user/profile-picture/${profile.username}`, {
+					responseType: "blob"
+				});
+
+				const url = URL.createObjectURL(response.data);
+				setProfilePic(url);
+			} catch(err) {
+				alert(`Error loading profile picture: ${err}`);
+			}
+		}
+	});
 
 	if ( loading ) {
 		return (
@@ -34,7 +56,7 @@ const ProfilePage = () => {
 				<Navigation />
 				<div className="divider"></div>
 				<div className="content-container">
-					<h1>Oops! An error occured.</h1>
+					<h1>{error}</h1>
 				</div>
 			</div>
 		);
@@ -46,8 +68,8 @@ const ProfilePage = () => {
 			<div className="divider"></div>
 			<div className="content-container">
 				<div>
-					<img src={`https://localhost:4000/user/profile-picture/${profile.username}`} alt="" />
-					<h2>`${profile.firstname} ${profile.lastname}@${profile.username}`</h2>
+					<img className="profile-pic" src={profile_pic} alt="profile picture" />
+					<h1>{profile.first_name} {profile.last_name}@{profile.username}</h1>
 				</div>
 			</div>
 		</div>

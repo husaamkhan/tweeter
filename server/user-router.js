@@ -31,8 +31,8 @@ module.exports = (db, path) => {
 				res.status(401).send("Access denied");
 			}
 			else if ( password === user[0].password ) {
-				req.session.username = user.username;
-				req.session.user_id = user.user_id;
+				req.session.username = user[0].username;
+				req.session.user_id = user[0].user_id;
 				req.session.logged_in = true;
 
 				res.status(200).send("Access granted");
@@ -189,13 +189,15 @@ module.exports = (db, path) => {
 
 	async function getMyProfile(req, res, next) {
 		try {
-			console.log("-- getmyprofile() --");
 			let profile = await getProfileInfo(req.session.username);
 
 			if ( profile.length !== 0 ) {
 				profile[0].username = req.session.username;
-				res.status(200).send("User profile found");
+				console.log("-- profile found --");
+				console.log(profile[0]);
+				res.status(200).json(profile[0]);
 			} else {
+				console.log(`Error: User with username ${req.session.username} not found!`);
 				res.status(404).send("User not found");
 			}
 		} catch(err) {
@@ -206,8 +208,8 @@ module.exports = (db, path) => {
 
 	async function getProfileInfo(username) {
 		return new Promise((resolve, reject) => {
-			const q = "SELECT first_name, last_name, followers, following, posts, likes FROM users" + 
-						"WHERE username = ?;"
+			const q = "SELECT first_name, last_name, followers, following, posts, likes FROM users " 
+						+ "WHERE username = ?;";
 			
 			db.query(q, [username], (err, result) => {
 				if (err) {
@@ -220,10 +222,14 @@ module.exports = (db, path) => {
 	}
 
 	async function getProfilePicture(req, res, next) {
+		console.log("-- getprofilepicture() --");
 		try {
 			const id = await findProfilePictureId(req.params.username);
-			const filepath = await getProfilePicturePath(id);
-
+			const response = await getProfilePicturePath(id[0]);
+			const filepath = response[0].filepath;
+			
+			console.log("-- profile pic found --");
+			console.log(filepath);
 			res.status(200).sendFile(path.resolve(filepath), (err) => {
 				if (err) throw err;
 			})
