@@ -15,8 +15,6 @@ const ProfilePage = () => {
 				setProfile(response.data);
 			} catch(err) {
 				setError(err.message);
-			} finally {
-				setLoading(false);
 			}
 		}
 
@@ -30,13 +28,20 @@ const ProfilePage = () => {
 					responseType: "blob"
 				});
 
-				const url = URL.createObjectURL(response.data);
-				setProfilePic(url);
+				setProfilePic(URL.createObjectURL(response.data));
 			} catch(err) {
-				alert(`Error loading profile picture: ${err}`);
+				setError(err.message);
+			} finally {
+				setLoading(false);
 			}
 		}
-	});
+
+		if ( profile ) { getProfilePic(profile.username); }
+
+		return () => {
+			if ( profile_pic ) { URL.revokeObjectURL(profile_pic); }
+		};
+	}, [profile]);
 
 	if ( loading ) {
 		return (
@@ -67,8 +72,8 @@ const ProfilePage = () => {
 			<Navigation />
 			<div className="divider"></div>
 			<div className="content-container">
-				<div>
-					<img className="profile-pic" src={profile_pic} alt="profile picture" />
+				<div className="row-container">
+					<img className="profile-pic" src={profile_pic} alt="" />
 					<h1>{profile.first_name} {profile.last_name}@{profile.username}</h1>
 				</div>
 			</div>

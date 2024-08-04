@@ -193,8 +193,6 @@ module.exports = (db, path) => {
 
 			if ( profile.length !== 0 ) {
 				profile[0].username = req.session.username;
-				console.log("-- profile found --");
-				console.log(profile[0]);
 				res.status(200).json(profile[0]);
 			} else {
 				console.log(`Error: User with username ${req.session.username} not found!`);
@@ -222,14 +220,11 @@ module.exports = (db, path) => {
 	}
 
 	async function getProfilePicture(req, res, next) {
-		console.log("-- getprofilepicture() --");
 		try {
 			const id = await findProfilePictureId(req.params.username);
 			const response = await getProfilePicturePath(id[0]);
 			const filepath = response[0].filepath;
 			
-			console.log("-- profile pic found --");
-			console.log(filepath);
 			res.status(200).sendFile(path.resolve(filepath), (err) => {
 				if (err) throw err;
 			})
