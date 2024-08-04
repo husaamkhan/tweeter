@@ -71,12 +71,27 @@ const ProfilePage = () => {
 		<div className="page-container">
 			<Navigation />
 			<div className="divider"></div>
-			<div className="content-container">
-				<div className="row-container">
+			<div className="profile-container">
+				<div className="large-row-container">
 					<img className="profile-pic" src={profile_pic} alt="" />
+					<button className="edit-profile">Edit Profile</button>
+				</div>
+				<div className="small-row-container">
 					<h1>{profile.first_name} {profile.last_name}@{profile.username}</h1>
 				</div>
+				<div className="small-row-container">
+					<h2 className="profile-info">Followers: {profile.followers}</h2>
+					<h2 className="profile-info">Following: {profile.following}</h2>
+				</div>
+				<div className="small-row-container">
+					<ul className="profile-nav-ul">	
+						<li className="profile-nav-posts-li">Posts</li>
+						<li className="profile-nav-replies-li">Replies</li>
+						<li className="profile-nav-likes-li">Likes</li>
+					</ul>
+				</div>
 			</div>
+			<div className="divider"></div>
 		</div>
 	);
 }
