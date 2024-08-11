@@ -214,11 +214,21 @@ h1 {
 	flex-grow: 0.75;
 }
 
-.divider {
+.column-divider {
 	background-color: #606060;
 	width: 2.2px;
 	height: auto;
 	margin: 2em;
+	border: none;
+	border-radius: 7px;
+}
+
+.row-divider {
+	background-color: #606060;
+	height: 2.2px;
+	width: auto;
+	margin-top: 1.5em;
+	margin-bottom: 1.5em;
 	border: none;
 	border-radius: 7px;
 }
@@ -276,7 +286,7 @@ h2 {
 }
 
 
-.profile-nav-posts-li {
+.profile-nav-tweets-li {
 	padding: 0.8em;
 	background-color: #00102d;
 	border-radius: 10px 0 0 10px;
@@ -284,6 +294,7 @@ h2 {
 	flex-basis: auto;
 	flex-grow: 1;
 	text-align: center;
+	transition: 0.2s;
 }
 
 .profile-nav-replies-li {
@@ -293,6 +304,7 @@ h2 {
 	flex-basis: auto;
 	flex-grow: 1;
 	text-align: center;
+	transition: 0.2s;
 }
 
 .profile-nav-likes-li {
@@ -303,4 +315,35 @@ h2 {
 	flex-basis: auto;
 	flex-grow: 1;
 	text-align: center;
+	transition: 0.2s;
+}
+
+.profile-nav-tweets-li:hover {
+	background-color: #36bdf9;
+	transition: 0.2s;
+}
+
+.profile-nav-replies-li:hover {
+	background-color: #36bdf9;
+	transition: 0.2s;
+}
+
+.profile-nav-likes-li:hover {
+	background-color: #36bdf9;
+	transition: 0.2s;
+}
+
+.profile-nav-tweets-li:active {
+	background-color: #0580b6;
+	transition: 0.2s;
+}
+
+.profile-nav-replies-li:active {
+	background-color: #0580b6;
+	transition: 0.2s;
+}
+
+.profile-nav-likes-li:active {
+	background-color: #0580b6;
+	transition: 0.2s;
 }

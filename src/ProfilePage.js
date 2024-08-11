@@ -1,12 +1,14 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Navigation from './Navigation';
+import TweetList from './TweetList';
 
 const ProfilePage = () => {
 	const [profile, setProfile] = useState(null);
 	const [profile_pic, setProfilePic] = useState("");
 	const [loading, setLoading]	= useState(true);
 	const [error, setError] = useState(null);
+	const [active, setActive] = useState("tweets");
 
 	useEffect( () => {
 		const getProfile = async () => {
@@ -43,11 +45,15 @@ const ProfilePage = () => {
 		};
 	}, [profile]);
 
+	const handleTweets = () => { setActive("tweets") };
+	const handleReplies = () => { setActive("replies") };
+	const handleLikes = () => { setActive("likes") };
+
 	if ( loading ) {
 		return (
 			<div className="page-container">
 				<Navigation />
-				<div className="divider"></div>
+				<div className="column-divider"></div>
 				<div className="content-container">
 					<h1>Loading...</h1>
 				</div>
@@ -59,18 +65,18 @@ const ProfilePage = () => {
 		return (
 			<div className="page-container">
 				<Navigation />
-				<div className="divider"></div>
+				<div className="column-divider"></div>
 				<div className="content-container">
 					<h1>{error}</h1>
 				</div>
 			</div>
 		);
 	}
-
+	
 	return (
 		<div className="page-container">
 			<Navigation />
-			<div className="divider"></div>
+			<div className="column-divider"></div>
 			<div className="profile-container">
 				<div className="large-row-container">
 					<img className="profile-pic" src={profile_pic} alt="" />
@@ -83,15 +89,42 @@ const ProfilePage = () => {
 					<h2 className="profile-info">Followers: {profile.followers}</h2>
 					<h2 className="profile-info">Following: {profile.following}</h2>
 				</div>
+				<div className="row-divider"></div>
 				<div className="small-row-container">
 					<ul className="profile-nav-ul">	
-						<li className="profile-nav-posts-li">Posts</li>
-						<li className="profile-nav-replies-li">Replies</li>
-						<li className="profile-nav-likes-li">Likes</li>
+
+						<li  
+						className="profile-nav-tweets-li"
+						id="tweets"
+						onClick={ handleTweets } 
+						style={{
+							backgroundColor: active === "tweets" ? "#009bff" : "#00102d"
+						}}
+						>Tweets</li>
+
+						<li 
+							className="profile-nav-replies-li"
+							id="replies"
+							onClick={ handleReplies }
+							style={{
+								backgroundColor: active === "replies" ? "#009bff" : "#00102d"
+							}}
+						>Replies</li>
+						<li
+							className="profile-nav-likes-li"
+							id="likes"
+							onClick={ handleLikes }
+							style={{
+								backgroundColor: active === "likes" ? "#009bff" : "#00102d"
+							}}
+						>Likes</li>
+
 					</ul>
 				</div>
+				<div className="row-divider"></div>
+				<TweetList type={active} />
 			</div>
-			<div className="divider"></div>
+			<div className="column-divider"></div>
 		</div>
 	);
 }

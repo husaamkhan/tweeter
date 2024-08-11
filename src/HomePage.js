@@ -26,7 +26,7 @@ const HomePage = () => {
 		return (
 			<div className="page-container">
 				<Navigation />
-				<div className="divider"></div>
+				<div className="column-divider"></div>
 				<div className="content-container">
 					<h1>Loading...</h1>
 				</div>
@@ -38,7 +38,7 @@ const HomePage = () => {
 		return (
 			<div className="page-container">
 				<Navigation />
-				<div className="divider"></div>
+				<div className="column-divider"></div>
 				<div className="content-container">
 					<h1>Oops! An error occured.</h1>
 				</div>
@@ -49,7 +49,7 @@ const HomePage = () => {
 	return (
 		<div className="page-container">
 			<Navigation />
-			<div className="divider"></div>
+			<div className="column-divider"></div>
 			<div className="content-container">
 				{feed.length > 0 ? (
 					<ul>
