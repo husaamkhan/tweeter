@@ -62,8 +62,8 @@ const LogInPage = () => {
 				</div>
 			</div>
 			<div>
-				<button onClick={handleLogIn}>Log In</button>
-				<button onClick={handleRegister}>Register</button>
+				<button onClick={ () => { handleLogIn() } }>Log In</button>
+				<button onClick={ () => { handleRegister() } }>Register</button>
 			</div>
 		</div>
 	);

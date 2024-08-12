@@ -6,7 +6,8 @@ import SearchPage from './SearchPage'
 import NotificationsPage from './NotificationsPage';
 import ProfilePage from './ProfilePage';
 import PostPage from './PostPage';
-import { BrowserRouter as Router, Route, Routes, useHistory } from 'react-router-dom';
+import EditProfilePage from './EditProfilePage';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
 					<Route path="/notifications" element={<NotificationsPage />} />
 					<Route path="/profile" element={<ProfilePage />} />
 					<Route path="/post" element={<PostPage />} />
+					<Route path="/edit-profile" element={<EditProfilePage />} />
 				</Routes>
 			</Router>
 	  	</div>

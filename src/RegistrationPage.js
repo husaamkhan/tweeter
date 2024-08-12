@@ -71,7 +71,7 @@ const RegistrationPage = () => {
 							onChange={handleChange} />
 					</div>
 				</div>
-				<button onClick={handleRegister}>Create Account</button>
+				<button onClick={ () => { handleRegister() } }>Create Account</button>
 			</div>
 		</div>
 	);

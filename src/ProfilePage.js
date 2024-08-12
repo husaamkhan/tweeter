@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navigation from './Navigation';
 import TweetList from './TweetList';
 
@@ -43,11 +44,13 @@ const ProfilePage = () => {
 		return () => {
 			if ( profile_pic ) { URL.revokeObjectURL(profile_pic); }
 		};
-	}, [profile]);
+	}, [profile, profile_pic]);
 
+	const navigate = useNavigate();
 	const handleTweets = () => { setActive("tweets") };
 	const handleReplies = () => { setActive("replies") };
 	const handleLikes = () => { setActive("likes") };
+	const handleEditProfile = () => { navigate("/edit-profile", { profile: {profile} }) };
 
 	if ( loading ) {
 		return (
@@ -80,7 +83,7 @@ const ProfilePage = () => {
 			<div className="profile-container">
 				<div className="large-row-container">
 					<img className="profile-pic" src={profile_pic} alt="" />
-					<button className="edit-profile">Edit Profile</button>
+					<button className="edit-profile" onClick={ () => { handleEditProfile() } }>Edit Profile</button>
 				</div>
 				<div className="small-row-container">
 					<h1>{profile.first_name} {profile.last_name}@{profile.username}</h1>
@@ -96,7 +99,7 @@ const ProfilePage = () => {
 						<li  
 						className="profile-nav-tweets-li"
 						id="tweets"
-						onClick={ handleTweets } 
+						onClick={ () => { handleTweets() } }
 						style={{
 							backgroundColor: active === "tweets" ? "#009bff" : "#00102d"
 						}}
@@ -105,7 +108,7 @@ const ProfilePage = () => {
 						<li 
 							className="profile-nav-replies-li"
 							id="replies"
-							onClick={ handleReplies }
+							onClick={ () => { handleReplies() } }
 							style={{
 								backgroundColor: active === "replies" ? "#009bff" : "#00102d"
 							}}
@@ -113,7 +116,7 @@ const ProfilePage = () => {
 						<li
 							className="profile-nav-likes-li"
 							id="likes"
-							onClick={ handleLikes }
+							onClick={ () => { handleLikes() } }
 							style={{
 								backgroundColor: active === "likes" ? "#009bff" : "#00102d"
 							}}
@@ -122,7 +125,7 @@ const ProfilePage = () => {
 					</ul>
 				</div>
 				<div className="row-divider"></div>
-				<TweetList type={active} />
+				<TweetList type={active} username={profile.username} />
 			</div>
 			<div className="column-divider"></div>
 		</div>
