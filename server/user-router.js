@@ -16,6 +16,9 @@ module.exports = (db, path) => {
 	router.get('/myprofile', getMyProfile);
 	router.get('/profile-picture/:username', getProfilePicture);
 	router.get('/view-tweet/:tweet_id', getTweet);
+	router.get('/:username/tweets', getUserTweets);
+	router.get('/:username/replies', getUserReplies);
+	router.get('/:username/likes', getUserLikes);
 
 	// PUT Requests
 	router.put('/edit-profile', editProfile);
@@ -261,6 +264,74 @@ module.exports = (db, path) => {
 	}
 
 	async function getTweet(req, res, next) {}
+
+	async function getUserTweets(req, res, next) {
+		try {
+			const user = await findUser(req.params.username);
+			const tweets = await retrieveUserTweets(user[0].user_id);
+			res.status(200).json(tweets);
+		} catch(err) {
+			res.status(500).send("Internal server error");
+		}
+
+	}
+
+	async function retrieveUserTweets(user_id) {
+		return new Promise((resolve, reject) => {
+			const q = `SELECT * FROM tweets WHERE user_id = ${user_id}`;
+			db.query(q, [user_id], (err, result) => {
+				if (err) {
+					return reject(err);
+				}
+
+				resolve(result);
+			});
+		});
+	}
+
+	async function getUserReplies(req, res, next) {
+		try {
+			const user = await findUser(req.params.username);
+			const reply_ids = await retrieveUserReplies(user[0].user_id);
+
+			let tweets = [];
+			for (let i = 0; i < reply_ids.length; i++) {
+				tweets[i] = await retrieveTweetById(reply_ids[i])[0];
+			}
+
+			res.status(200).json(tweets);
+		} catch(err) {
+			res.status(500).send("Internal server error");
+		}
+	}
+
+	async function retrieveUserReplies(user_id) {
+		return new Promise((resolve, reject) => {
+			const q = `SELECT * FROM replies WHERE user_id = ${user_id}`;
+			db.query(q, [user_id], (err, result) => {
+				if (err) {
+					return reject(err);
+				}
+
+				resolve(result);
+			});
+		});
+	}
+
+	async function retrieveTweetById(tweet_id) {
+		return new Promise((resolve, reject) => {
+			const q = `SELECT * FROM tweet WHERE tweet_id = ${tweet_id}`;
+			db.query(q, [tweet_id], (err, result) => {
+				if (err) {
+					return reject(err);
+				}
+
+				resolve(result);
+			});
+		});
+	}
+
+	async function getUserLikes(req, res, next) {}
 	async function editProfile(req, res, next) {}
 	async function changePassword(req, res, next) {}
 	async function changeProfilePicture(req, res, next) {}
