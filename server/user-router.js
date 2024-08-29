@@ -209,7 +209,7 @@ module.exports = (db, path) => {
 
 	async function getProfileInfo(username) {
 		return new Promise((resolve, reject) => {
-			const q = "SELECT first_name, last_name, followers, following, posts, likes FROM users " 
+			const q = "SELECT first_name, last_name, followers, following, posts, likes, password FROM users " 
 						+ "WHERE username = ?;";
 			
 			db.query(q, [username], (err, result) => {

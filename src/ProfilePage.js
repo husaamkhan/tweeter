@@ -50,7 +50,18 @@ const ProfilePage = () => {
 	const handleTweets = () => { setActive("tweets") };
 	const handleReplies = () => { setActive("replies") };
 	const handleLikes = () => { setActive("likes") };
-	const handleEditProfile = () => { navigate("/edit-profile", { profile: {profile} }) };
+	const handleEditProfile = () => { 
+		if ( profile ) {
+			navigate("/edit-profile", { 
+				state: {
+					first_name: profile.first_name,
+					last_name: profile.last_name,
+					username: profile.username,
+					password: profile.password
+				}
+			});
+		}
+	};
 
 	if ( loading ) {
 		return (
@@ -83,7 +94,15 @@ const ProfilePage = () => {
 			<div className="profile-container">
 				<div className="large-row-container">
 					<img className="profile-pic" src={profile_pic} alt="" />
-					<button className="edit-profile" onClick={ () => { handleEditProfile() } }>Edit Profile</button>
+		
+					<button 
+						className="edit-profile"
+						onClick={ () => { handleEditProfile() } }
+						disabled={!profile}
+					>
+						Edit Profile
+					</button>
+
 				</div>
 				<div className="small-row-container">
 					<h1>{profile.first_name} {profile.last_name}@{profile.username}</h1>
