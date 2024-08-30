@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
 const EditProfilePage = () => {
@@ -9,18 +9,50 @@ const EditProfilePage = () => {
 	const [un_value, setUserNameValue] = useState(location.state.username);
 	const [pw_value, setPassWordValue] = useState(location.state.password);
 
+	const navigate = useNavigate();
 	const checkChanges = () => {
-		if ( location.state.first_name == fn_value && location.state.last_name == ln_value &&
-			location.state.username == un_value && location.state.password == pw_value ) {
+		if ( location.state.first_name == fn_value  && location.state.last_name == ln_value
+			&& location.state.username == un_value && location.state.password == pw_value ) {
 			return false;
 		}
 
 		return true;
 	};
-	const handleUpdate = () => {
+
+	const handleUpdate = async () => {
+		alert("update click1");
 		if ( checkChanges() ) {
 			// check if a user with the username already exists
 			// send new profile info to server
+			
+			let changes_ok = true;
+
+			if ( un_value !== location.state.username ) {
+				const response = await axios.get(`/user/${un_value}/check-username`);
+				if ( response.status !== 200 ) {
+					changes_ok = false;
+				}
+			}
+
+			if ( changes_ok ) {
+				const new_profile = {
+					"first_name": fn_value,
+					"last_name": ln_value,
+					"username": un_value,
+					"password": pw_value,
+					"old_username": location.state.username
+				};
+				const response = await axios.put(`/user/${location.state.username}/edit-profile`,
+					new_profile);
+
+				if ( response.status == 200 ) {
+					alert("Profile successfully updated");
+				} else {
+					alert("Error updating profile! Please try again later!");
+				}
+
+				navigate("/profile");
+			}
 		}
 	};
 	const handleChangeProfilePicture = () => {};
@@ -33,7 +65,7 @@ const EditProfilePage = () => {
 					<label>First Name:</label>
 					<input
 						type="text"
-						value={location.state.first_name}
+						value={fn_value}
 						onChange={(e) => setFirstNameValue(e.target.value)}
 					>
 					</input>
@@ -42,7 +74,7 @@ const EditProfilePage = () => {
 					<label>Last Name:</label>
 					<input
 						type="text"
-						value={location.state.last_name}
+						value={ln_value}
 						onChange={(e) => setLastNameValue(e.target.value)}
 					></input>
 				</div>
@@ -50,7 +82,7 @@ const EditProfilePage = () => {
 					<label>Username:</label>
 					<input
 						type="text"
-						value={location.state.username}
+						value={un_value}
 						onChange={(e) => setUserNameValue(e.target.value)}
 					></input>
 				</div>
@@ -58,13 +90,13 @@ const EditProfilePage = () => {
 					<label>Password:</label>
 					<input 
 						type="password" 
-						value={location.state.password}
+						value={pw_value}
 						onChange={(e) => setPassWordValue(e.target.value)}
 					></input>
 				</div>
 			</div>
 			<div>
-				<button>Update</button>
+				<button onClick={handleUpdate}>Update</button>
 				<button>Change Profile Picture</button>
 			</div>
 		</div>

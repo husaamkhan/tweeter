@@ -19,9 +19,10 @@ module.exports = (db, path) => {
 	router.get('/:username/tweets', getUserTweets);
 	router.get('/:username/replies', getUserReplies);
 	router.get('/:username/likes', getUserLikes);
+	router.get('/:username/check-username', checkUsername)
 
 	// PUT Requests
-	router.put('/edit-profile', editProfile);
+	router.put('/:username/edit-profile', editProfile);
 	router.put('/change-password', changePassword);
 	router.put('/change-profile-picture', changeProfilePicture);
 
@@ -332,7 +333,47 @@ module.exports = (db, path) => {
 	}
 
 	async function getUserLikes(req, res, next) {}
-	async function editProfile(req, res, next) {}
+
+	async function checkUsername(req, res, next) {
+		try {
+			const users = await findUser(req.params.username);
+			if ( users.length == 0 ) {
+				res.status(200).send("Username available");
+			} else {
+				res.status(400).send("Username unavailable");
+			}
+		} catch (err) {
+			res.status(500).send("Internal server error");
+		}
+	}
+
+	async function editProfile(req, res, next) {
+		try {
+			const new_profile = req.body;
+			await storeUpdatedProfile(new_profile);
+			res.status(200).send("Profile updated succesfully");
+		} catch (err) {
+			res.status(500).send("Internal server error!");
+		}
+	}
+
+	async function storeUpdatedProfile(new_profile) {
+		return new Promise((resolve, reject) => {
+			const q = "UPDATE users SET first_name = ?, last_name = ?, username = ?, password = ? "
+				+ `WHERE username = ?`;
+			db.query(q,
+				[new_profile.first_name, new_profile.last_name, new_profile.username,
+				new_profile.password, new_profile.old_username], (err, result) => {
+					if (err) {
+						return reject(err);
+					}
+
+					resolve(result);
+				}
+			);
+		});
+	}
+
 	async function changePassword(req, res, next) {}
 	async function changeProfilePicture(req, res, next) {}
 
