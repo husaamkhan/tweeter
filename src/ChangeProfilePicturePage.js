@@ -5,6 +5,7 @@ import Navigation from "./Navigation";
 
 const ChangeProfilePicturePage = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const [picture, setPicture] = useState(null);
     const [new_picture, setNewPicture] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -32,9 +33,8 @@ const ChangeProfilePicturePage = () => {
         };
     } );
 
-    const handleUpload = async () => {
+    const handleUpload = async (e) => {
         try {
-            alert(new_picture);
             if ( new_picture ) {
                 await axios.put(
                     `/user/${location.state.username}/change-profile-picture`,
@@ -45,8 +45,11 @@ const ChangeProfilePicturePage = () => {
                         }
                     }
                 );
+
+                alert("Profile picture successfully updated!");
             } else {
                 alert("Please select a new profile picture!");
+                e.preventDefault(); // Prevent redirect
             }
         } catch (err) {
             alert(err);
@@ -88,6 +91,7 @@ const ChangeProfilePicturePage = () => {
                 <form
                     encType="multipart/form-data"
                     onSubmit={handleUpload}
+                    action="/profile"
                 >
                     <input
                         className="picture-input"
