@@ -24,7 +24,7 @@ module.exports = (db, path) => {
 	// PUT Requests
 	router.put('/:username/edit-profile', editProfile);
 	router.put('/change-password', changePassword);
-	router.put('/change-profile-picture', changeProfilePicture);
+	router.put('/:username/change-profile-picture', changeProfilePicture);
 
 	async function logInUser(req, res, next) {
 		try {
@@ -57,7 +57,7 @@ module.exports = (db, path) => {
 			if ( user.length !== 0 ) {
 				res.status(400).send("Username taken");
 			} else {
-				
+
 				const q = "INSERT INTO users (username, password, first_name, last_name) VALUES (" +
 					"?, ?, ?, ?)";
 
@@ -107,14 +107,14 @@ module.exports = (db, path) => {
 			if ( followees.length > 0 ) {
 				for (followee_id in followees) {
 					let followee_tweets = await getTweets(followee_tweets);
-					
+
 					if ( tweets.length === 0 ) {
 						tweets = followee_tweets;
 						continue;
 					}
 
 					let tweets = merge(followee_tweets, tweets);
-				}					
+				}
 			}
 
 			res.status(200).json(tweets);
@@ -157,7 +157,7 @@ module.exports = (db, path) => {
 		let i1 = arr1.length-1;
 		let i2 = arr2.length-1;
 		t = 0;
-		 
+
 		while(t < arr1.length+arr2.length && (i1 !== -1 && i2 !== -1)) {
 			if ( i1 === -1 ) {
 				temp[t] = arr2[i2];
@@ -210,9 +210,9 @@ module.exports = (db, path) => {
 
 	async function getProfileInfo(username) {
 		return new Promise((resolve, reject) => {
-			const q = "SELECT first_name, last_name, followers, following, posts, likes, password FROM users " 
+			const q = "SELECT first_name, last_name, followers, following, posts, likes, password FROM users "
 						+ "WHERE username = ?;";
-			
+
 			db.query(q, [username], (err, result) => {
 				if (err) {
 					return reject(err);
@@ -228,7 +228,7 @@ module.exports = (db, path) => {
 			const id = await findProfilePictureId(req.params.username);
 			const response = await getProfilePicturePath(id[0]);
 			const filepath = response[0].filepath;
-			
+
 			res.status(200).sendFile(path.resolve(filepath), (err) => {
 				if (err) throw err;
 			})
