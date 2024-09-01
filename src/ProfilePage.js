@@ -44,7 +44,7 @@ const ProfilePage = () => {
 		return () => {
 			if ( profile_pic ) { URL.revokeObjectURL(profile_pic); }
 		};
-	}, [profile, profile_pic]);
+	}, [profile]);
 
 	const navigate = useNavigate();
 	const handleTweets = () => { setActive("tweets") };
