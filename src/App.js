@@ -7,8 +7,8 @@ import NotificationsPage from './NotificationsPage';
 import ProfilePage from './ProfilePage';
 import PostPage from './PostPage';
 import EditProfilePage from './EditProfilePage';
+import ChangeProfilePicturePage from "./ChangeProfilePicturePage";
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { useState, useEffect } from 'react';
 
 function App() {
 	return (
@@ -23,6 +23,7 @@ function App() {
 					<Route path="/profile" element={<ProfilePage />} />
 					<Route path="/post" element={<PostPage />} />
 					<Route path="/edit-profile" element={<EditProfilePage />} />
+					<Route path="/change-profile-picture" element={<ChangeProfilePicturePage />} />
 				</Routes>
 			</Router>
 	  	</div>

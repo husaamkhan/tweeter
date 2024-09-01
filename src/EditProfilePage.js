@@ -22,9 +22,6 @@ const EditProfilePage = () => {
 	const handleUpdate = async () => {
 		alert("update click1");
 		if ( checkChanges() ) {
-			// check if a user with the username already exists
-			// send new profile info to server
-			
 			let changes_ok = true;
 
 			if ( un_value !== location.state.username ) {
@@ -55,7 +52,14 @@ const EditProfilePage = () => {
 			}
 		}
 	};
-	const handleChangeProfilePicture = () => {};
+	const handleChangeProfilePicture = () => {
+		navigate("/change-profile-picture",
+		{
+			state: {
+				username: location.state.username
+			}
+		});
+	};
 
 	return(
 		<div className="auth-container">
@@ -88,8 +92,8 @@ const EditProfilePage = () => {
 				</div>
 				<div className="input-container">
 					<label>Password:</label>
-					<input 
-						type="password" 
+					<input
+						type="password"
 						value={pw_value}
 						onChange={(e) => setPassWordValue(e.target.value)}
 					></input>
@@ -97,7 +101,7 @@ const EditProfilePage = () => {
 			</div>
 			<div>
 				<button onClick={handleUpdate}>Update</button>
-				<button>Change Profile Picture</button>
+				<button onClick={handleChangeProfilePicture}>Change Profile Picture</button>
 			</div>
 		</div>
 	);

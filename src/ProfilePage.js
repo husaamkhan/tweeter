@@ -8,7 +8,7 @@ const ProfilePage = () => {
 	const [profile, setProfile] = useState(null);
 	const [profile_pic, setProfilePic] = useState("");
 	const [loading, setLoading]	= useState(true);
-	const [error, setError] = useState(null);
+	const [error, setError] = useState(false);
 	const [active, setActive] = useState("tweets");
 
 	useEffect( () => {
@@ -33,13 +33,13 @@ const ProfilePage = () => {
 
 				setProfilePic(URL.createObjectURL(response.data));
 			} catch(err) {
-				setError(err.message);
+				setError(true);
 			} finally {
 				setLoading(false);
 			}
-		}
+		};
 
-		if ( profile ) { getProfilePic(profile.username); }
+		if ( profile ) { getProfilePic(); }
 
 		return () => {
 			if ( profile_pic ) { URL.revokeObjectURL(profile_pic); }
@@ -50,9 +50,9 @@ const ProfilePage = () => {
 	const handleTweets = () => { setActive("tweets") };
 	const handleReplies = () => { setActive("replies") };
 	const handleLikes = () => { setActive("likes") };
-	const handleEditProfile = () => { 
+	const handleEditProfile = () => {
 		if ( profile ) {
-			navigate("/edit-profile", { 
+			navigate("/edit-profile", {
 				state: {
 					first_name: profile.first_name,
 					last_name: profile.last_name,
@@ -81,12 +81,12 @@ const ProfilePage = () => {
 				<Navigation />
 				<div className="column-divider"></div>
 				<div className="content-container">
-					<h1>{error}</h1>
+					<h1>Oops! An error occured! Please try again later.</h1>
 				</div>
 			</div>
 		);
 	}
-	
+
 	return (
 		<div className="page-container">
 			<Navigation />
@@ -94,9 +94,9 @@ const ProfilePage = () => {
 			<div className="profile-container">
 				<div className="large-row-container">
 					<img className="profile-pic" src={profile_pic} alt="" />
-		
-					<button 
-						className="edit-profile"
+
+					<button
+						className="large-button"
 						onClick={ () => { handleEditProfile() } }
 						disabled={!profile}
 					>
@@ -113,9 +113,9 @@ const ProfilePage = () => {
 				</div>
 				<div className="row-divider"></div>
 				<div className="small-row-container">
-					<ul className="profile-nav-ul">	
+					<ul className="profile-nav-ul">
 
-						<li  
+						<li
 						className="profile-nav-tweets-li"
 						id="tweets"
 						onClick={ () => { handleTweets() } }
@@ -124,7 +124,7 @@ const ProfilePage = () => {
 						}}
 						>Tweets</li>
 
-						<li 
+						<li
 							className="profile-nav-replies-li"
 							id="replies"
 							onClick={ () => { handleReplies() } }
