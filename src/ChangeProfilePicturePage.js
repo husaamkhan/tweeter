@@ -35,12 +35,15 @@ const ChangeProfilePicturePage = () => {
     const handleUpload = async (e) => {
         try {
             if ( new_picture ) {
+                const data = new FormData();
+                data.append("file", new_picture);
+
                 await axios.put(
                     `/user/${location.state.username}/change-profile-picture`,
-                    new_picture,
+                    data,
                     {
                         headers: {
-                            "Content-Type": "blob"
+                            "Content-Type": "multipart/form-data"
                         }
                     }
                 );
@@ -51,7 +54,7 @@ const ChangeProfilePicturePage = () => {
                 e.preventDefault(); // Prevent redirect
             }
         } catch (err) {
-            alert(err);
+            alert("Oops! An error occured! Please try again later.");
             setError(err);
         }
     };
