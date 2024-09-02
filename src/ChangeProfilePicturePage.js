@@ -1,11 +1,10 @@
 import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Navigation from "./Navigation";
 
 const ChangeProfilePicturePage = () => {
     const location = useLocation();
-    const navigate = useNavigate();
     const [picture, setPicture] = useState(null);
     const [new_picture, setNewPicture] = useState(null);
     const [loading, setLoading] = useState(true);
