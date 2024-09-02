@@ -6,20 +6,13 @@ USE tweeter_db;
 CREATE TABLE users (
     user_id INT PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(45) NOT NULL UNIQUE,
-    email VARCHAR(45) NOT NULL UNIQUE,
     password VARCHAR(45) NOT NULL,
-    profile_picture_id INT NOT NULL DEFAULT (1),
+    profile_picture_path VARCHAR(50) NOT NULL DEFAULT ("default.png"),
     first_name VARCHAR(45) NOT NULL,
     last_name VARCHAR(45) NOT NULL,
-    followers INT NOT NULL,
-    following INT NOT NULL,
-    notifications INT NOT NULL,
-    FOREIGN KEY (profile_picture_id) REFERENCES profile_pictures(profile_picture_id)
-);
-
-CREATE TABLE profile_pictures (
-	profile_picture_id INT PRIMARY KEY AUTO_INCREMENT,
-    filepath VARCHAR(45) NOT NULL
+    followers INT NOT NULL DEFAULT(0),
+    following INT NOT NULL DEFAULT(0),
+    notifications INT NOT NULL DEFAULT(0)
 );
 
 CREATE TABLE follows (
