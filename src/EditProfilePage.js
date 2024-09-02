@@ -11,8 +11,8 @@ const EditProfilePage = () => {
 
 	const navigate = useNavigate();
 	const checkChanges = () => {
-		if ( location.state.first_name == fn_value  && location.state.last_name == ln_value
-			&& location.state.username == un_value && location.state.password == pw_value ) {
+		if ( location.state.first_name === fn_value  && location.state.last_name === ln_value
+			&& location.state.username === un_value && location.state.password === pw_value ) {
 			return false;
 		}
 
@@ -42,7 +42,7 @@ const EditProfilePage = () => {
 				const response = await axios.put(`/user/${location.state.username}/edit-profile`,
 					new_profile);
 
-				if ( response.status == 200 ) {
+				if ( response.status === 200 ) {
 					alert("Profile successfully updated");
 				} else {
 					alert("Error updating profile! Please try again later!");
