@@ -12,9 +12,10 @@ app.use(express.json());
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 const mysql = require('mysql2');
-const upload = multer({ dest: "C:\\TweeterPictures"});
 
 const db = mysql.createConnection(db_config);
+
+const upload = multer({ dest: "C:\\TweeterPictures"});
 
 db.connect((err) => {
 	if (err) {

@@ -1,6 +1,7 @@
 const express = require('express');
+const fs = require("fs");
 
-module.exports = (db, path) => {
+module.exports = (db, upload, path) => {
 	const router = express.Router();
 
 	// POST Requests
@@ -24,7 +25,7 @@ module.exports = (db, path) => {
 	// PUT Requests
 	router.put('/:username/edit-profile', editProfile);
 	router.put('/change-password', changePassword);
-	router.put('/:username/change-profile-picture', changeProfilePicture);
+	router.put('/:username/change-profile-picture', upload.single("file"), changeProfilePicture);
 
 	async function logInUser(req, res, next) {
 		try {
@@ -203,14 +204,14 @@ module.exports = (db, path) => {
 				res.status(404).send("User not found");
 			}
 		} catch(err) {
-			console.log(`Error getting user profile: ${err}`)
+			console.log(`Error getting user profile: ${err}`);
 			res.status(500).send("Internal server error");
 		}
 	}
 
 	async function getProfileInfo(username) {
 		return new Promise((resolve, reject) => {
-			const q = "SELECT first_name, last_name, followers, following, posts, likes, password FROM users "
+			const q = "SELECT first_name, last_name, followers, following, password FROM users "
 						+ "WHERE username = ?;";
 
 			db.query(q, [username], (err, result) => {
@@ -225,11 +226,10 @@ module.exports = (db, path) => {
 
 	async function getProfilePicture(req, res, next) {
 		try {
-			const id = await findProfilePictureId(req.params.username);
-			const response = await getProfilePicturePath(id[0]);
-			const filepath = response[0].filepath;
+			const response = await getProfilePicturePath(req.params.username);
+			console.log("Response: ", response);
 
-			res.status(200).sendFile(path.resolve(filepath), (err) => {
+			res.status(200).sendFile(path.resolve(`C:\\TweeterPictures\\${response[0].profile_picture_path}`), (err) => {
 				if (err) throw err;
 			})
 		} catch(err) {
@@ -238,23 +238,10 @@ module.exports = (db, path) => {
 		}
 	}
 
-	async function findProfilePictureId(username) {
+	async function getProfilePicturePath(username) {
 		return new Promise((resolve, reject) => {
-			const q = "SELECT profile_picture_id FROM users WHERE username = ?;";
+			const q = "SELECT profile_picture_path FROM users WHERE username = ?;";
 			db.query(q, [username], (err, result) => {
-				if (err) {
-					return reject(err);
-				}
-
-				resolve(result);
-			});
-		});
-	}
-
-	async function getProfilePicturePath(id) {
-		return new Promise((resolve, reject) => {
-			const q = "SELECT filepath FROM profile_pictures WHERE profile_picture_id = ?;";
-			db.query(q, [id], (err, result) => {
 				if (err) {
 					return reject(err);
 				}
@@ -375,7 +362,47 @@ module.exports = (db, path) => {
 	}
 
 	async function changePassword(req, res, next) {}
-	async function changeProfilePicture(req, res, next) {}
+
+	async function changeProfilePicture(req, res, next) {
+		try {
+			const pic = getProfilePicturePath(req.params.username); // get old picture filename
+			if (pic[0] !== "default.png") { // delete old picture if its not default picture
+				fs.unlinkSync(`C:\\TweeterPictures\\${pic[0]}`);
+			}
+
+			setProfilePicture(username, req.file.filename)// set user's profile picture as new picture
+			res.status(200).send("Image successfully saved");
+		} catch (err) {
+			console.log(err);
+			res.status(500).send("Internal server error");
+		}
+	}
+
+	async function removeProfilePicture(username) {
+		return new Promise((resolve, reject) => {
+			const q = "UPDATE users SET profile_picture_path = default.png WHERE username = ?";
+			db.query(q, [username], (err, result) => {
+				if (err) {
+					return reject(err);
+				}
+
+				resolve(result);
+			})
+		});
+	}
+
+	async function setProfilePicture(username, filename) {
+		return new Promise((resolve, reject) => {
+			const q = "UPDATE users SET profile_picture_path = ? WHERE username = ?";
+			db.query(q, [filepath, username], (err, result) => {
+				if (err) {
+					return reject(err);
+				}
+
+				resolve(result);
+			});
+		});
+	}
 
 	return router;
 }
