@@ -22,6 +22,7 @@ module.exports = (db, upload, path) => {
 	router.get('/:username/replies', getUserReplies);
 	router.get('/:username/likes', getUserLikes);
 	router.get('/:username/check-username', checkUsername);
+	router.get('/authenticate', authenticate);
 
 	// PUT Requests
 	router.put('/:username/edit-profile', editProfile);
@@ -80,7 +81,7 @@ module.exports = (db, upload, path) => {
 				return res.status(500).send("Internal server error");
 			}
 		});
-		
+
 		res.clearCookie("connect.sid");
 		res.status(200).send("Successfully signed out");
 	}
@@ -340,6 +341,18 @@ module.exports = (db, upload, path) => {
 			}
 		} catch (err) {
 			res.status(500).send("Internal server error");
+		}
+	}
+
+	async function authenticate(req, res, next) {
+		try {
+			if ( req.session.logged_in ) {
+				req.status(200).send("User is logged in");
+			} else {
+				req.status(403).send("User is not logged in")
+			}
+		} catch (err) {
+			req.status(500).send("Internal server error");
 		}
 	}
 
