@@ -7,6 +7,7 @@ module.exports = (db, upload, path) => {
 	// POST Requests
 	router.post('/login', logInUser);
 	router.post('/register', registerUser);
+	router.post('/signout', signOutUser);
 	router.post('/tweet', postTweet);
 
 	// GET Requests
@@ -20,7 +21,7 @@ module.exports = (db, upload, path) => {
 	router.get('/:username/tweets', getUserTweets);
 	router.get('/:username/replies', getUserReplies);
 	router.get('/:username/likes', getUserLikes);
-	router.get('/:username/check-username', checkUsername)
+	router.get('/:username/check-username', checkUsername);
 
 	// PUT Requests
 	router.put('/:username/edit-profile', editProfile);
@@ -71,6 +72,15 @@ module.exports = (db, upload, path) => {
 
 		} catch (err) {
 			res.status(500).send("Internal Server Error occured while registering user");
+		}
+	}
+
+	async function signOutUser(req, res, next) {
+		try {
+			req.session.logged_in = false;
+			res.status(200).send("Successfully signed out");
+		} catch (err) {
+			res.status(500).send("Internal server error");
 		}
 	}
 
@@ -227,8 +237,6 @@ module.exports = (db, upload, path) => {
 	async function getProfilePicture(req, res, next) {
 		try {
 			const response = await getProfilePicturePath(req.params.username);
-			console.log("Response: ", response);
-
 			res.status(200).sendFile(path.resolve(`C:\\TweeterPictures\\${response[0].profile_picture_path}`), (err) => {
 				if (err) throw err;
 			})
@@ -365,12 +373,13 @@ module.exports = (db, upload, path) => {
 
 	async function changeProfilePicture(req, res, next) {
 		try {
-			const pic = getProfilePicturePath(req.params.username); // get old picture filename
-			if (pic[0] !== "default.png") { // delete old picture if its not default picture
-				fs.unlinkSync(`C:\\TweeterPictures\\${pic[0]}`);
+			const pic = await getProfilePicturePath(req.params.username); // get old picture filename
+			console.log(pic);
+			if (pic[0].profile_picture_path !== "default.jpg") { // delete old picture if its not default picture
+				fs.unlinkSync(`C:\\TweeterPictures\\${pic[0].profile_picture_path}`);
 			}
 
-			setProfilePicture(username, req.file.filename)// set user's profile picture as new picture
+			await setProfilePicture(req.params.username, req.file.filename)// set user's profile picture as new picture
 			res.status(200).send("Image successfully saved");
 		} catch (err) {
 			console.log(err);
@@ -380,7 +389,7 @@ module.exports = (db, upload, path) => {
 
 	async function removeProfilePicture(username) {
 		return new Promise((resolve, reject) => {
-			const q = "UPDATE users SET profile_picture_path = default.png WHERE username = ?";
+			const q = "UPDATE users SET profile_picture_path = default.jpg WHERE username = ?";
 			db.query(q, [username], (err, result) => {
 				if (err) {
 					return reject(err);
@@ -394,7 +403,7 @@ module.exports = (db, upload, path) => {
 	async function setProfilePicture(username, filename) {
 		return new Promise((resolve, reject) => {
 			const q = "UPDATE users SET profile_picture_path = ? WHERE username = ?";
-			db.query(q, [filepath, username], (err, result) => {
+			db.query(q, [filename, username], (err, result) => {
 				if (err) {
 					return reject(err);
 				}
