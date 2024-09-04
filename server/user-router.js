@@ -38,7 +38,6 @@ module.exports = (db, upload, path) => {
 			}
 			else if ( password === user[0].password ) {
 				req.session.username = user[0].username;
-				req.session.user_id = user[0].user_id;
 				req.session.logged_in = true;
 
 				res.status(200).send("Access granted");
@@ -76,12 +75,14 @@ module.exports = (db, upload, path) => {
 	}
 
 	async function signOutUser(req, res, next) {
-		try {
-			req.session.logged_in = false;
-			res.status(200).send("Successfully signed out");
-		} catch (err) {
-			res.status(500).send("Internal server error");
-		}
+		req.session.destroy((err) => {
+			if (err) {
+				return res.status(500).send("Internal server error");
+			}
+		});
+		
+		res.clearCookie("connect.sid");
+		res.status(200).send("Successfully signed out");
 	}
 
 	async function findUser(username) {
