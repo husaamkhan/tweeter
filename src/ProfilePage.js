@@ -5,6 +5,7 @@ import Navigation from './Navigation';
 import TweetList from './TweetList';
 
 const ProfilePage = () => {
+	const [auth, setAuth] = useState(false);
 	const [profile, setProfile] = useState(null);
 	const [profile_pic, setProfilePic] = useState("");
 	const [loading, setLoading]	= useState(true);
@@ -14,12 +15,24 @@ const ProfilePage = () => {
 	useEffect( () => {
 		const getProfile = async () => {
 			try {
+				const response = await axios.get("user/authenticate");
+			} catch (err) {
+				if ( err.response.status == 403 ) {
+					alert("Please sign in");
+				} else {
+					alert("Oops! An error occured! Please try again later");
+				}
+
+				navigate("/");
+			}
+
+			try {
 				const response = await axios.get("/user/myprofile");
 				setProfile(response.data);
 			} catch(err) {
-				setError(err.message);
+				setError(true);
 			}
-		}
+		};
 
 		getProfile();
 	}, []);
@@ -50,6 +63,7 @@ const ProfilePage = () => {
 	const handleTweets = () => { setActive("tweets") };
 	const handleReplies = () => { setActive("replies") };
 	const handleLikes = () => { setActive("likes") };
+	
 	const handleEditProfile = () => {
 		if ( profile ) {
 			navigate("/edit-profile", {
@@ -62,6 +76,17 @@ const ProfilePage = () => {
 			});
 		}
 	};
+
+	const handleSignOut = async () => {
+		try {
+			const response = await axios.post(`/user/signout`);
+			alert("Signed out successfully!");
+			navigate("/");
+		} catch (err) {
+			alert("Oops! An error occured while signing you out!");
+			navigate("/");
+		}
+	}
 
 	if ( loading ) {
 		return (
@@ -101,6 +126,13 @@ const ProfilePage = () => {
 						disabled={!profile}
 					>
 						Edit Profile
+					</button>
+
+					<button
+						className="large-button"
+						onClick={ handleSignOut }
+					>
+						Sign Out
 					</button>
 
 				</div>

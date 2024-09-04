@@ -347,9 +347,9 @@ module.exports = (db, upload, path) => {
 	async function authenticate(req, res, next) {
 		try {
 			if ( req.session.logged_in ) {
-				req.status(200).send("User is logged in");
+				res.status(200).send("User is logged in");
 			} else {
-				req.status(403).send("User is not logged in")
+				res.status(403).send("User is not logged in")
 			}
 		} catch (err) {
 			req.status(500).send("Internal server error");
